@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AskZyra - AI Assistant</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #0a0a0f;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        nav {
+            background-color: rgba(10, 10, 20, 0.95);
+            padding: 18px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #a855f733;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        nav a {
+            color: #cccccc;
+            text-decoration: none;
+            margin-left: 28px;
+            font-size: 15px;
+        }
+
+        nav a:hover { color: #a855f7; }
+
+        .container {
+            max-width: 750px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .chat-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .ai-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            margin: 0 auto 15px;
+            box-shadow: 0 0 30px #a855f755;
+        }
+
+        .chat-header h1 {
+            font-size: 36px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .chat-header p {
+            color: #777777;
+            font-size: 16px;
+        }
+
+        /* Chat History */
+        .chat-history {
+            margin-bottom: 25px;
+        }
+
+        .user-message {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+        }
+
+        .user-bubble {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: white;
+            padding: 14px 18px;
+            border-radius: 18px 18px 4px 18px;
+            font-size: 15px;
+            max-width: 80%;
+            line-height: 1.5;
+        }
+
+        .ai-message {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+            align-items: flex-start;
+        }
+
+        .ai-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .ai-bubble {
+            background: linear-gradient(135deg, #1a1a2e, #16162a);
+            border: 1px solid #a855f733;
+            color: #cccccc;
+            padding: 16px 20px;
+            border-radius: 4px 18px 18px 18px;
+            font-size: 15px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            max-width: 80%;
+        }
+
+        /* Quick Questions */
+        .quick-section {
+            margin-bottom: 25px;
+        }
+
+        .quick-section p {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .quick-btns {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .quick-btn {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #a855f722, #ec489922);
+            border: 1px solid #a855f744;
+            border-radius: 20px;
+            color: #d8a0f7;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quick-btn:hover {
+            background: linear-gradient(135deg, #a855f744, #ec489944);
+            border-color: #a855f7;
+        }
+
+        /* Input */
+        .input-box {
+            background: linear-gradient(135deg, #1a1a2e, #16162a);
+            border: 1px solid #a855f733;
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .question-input {
+            flex: 1;
+            padding: 14px 18px;
+            background: #0a0a0f;
+            border: 1px solid #a855f733;
+            border-radius: 10px;
+            color: white;
+            font-size: 15px;
+            outline: none;
+            resize: none;
+            min-height: 50px;
+            max-height: 150px;
+            font-family: Arial, sans-serif;
+            line-height: 1.5;
+        }
+
+        .question-input:focus { border-color: #a855f7; }
+
+        .ask-btn {
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: opacity 0.3s;
+            white-space: nowrap;
+        }
+
+        .ask-btn:hover { opacity: 0.9; }
+
+        /* Topics */
+        .topics {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .topics p {
+            color: #444;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .topic-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .topic-tag {
+            padding: 4px 12px;
+            background: #1a1a2e;
+            border: 1px solid #222;
+            border-radius: 20px;
+            color: #444;
+            font-size: 12px;
+        }
+
+        /* Loading */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #a855f7;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="/" style="text-decoration:none; display:flex; align-items:center; gap:8px;">
+    <svg width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="zgrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#a855f7"/>
+                <stop offset="100%" style="stop-color:#ec4899"/>
+            </linearGradient>
+        </defs>
+        <rect width="38" height="38" rx="10" fill="url(#zgrad)"/>
+        <text x="7" y="28" font-family="Arial" font-weight="900" font-size="24" fill="white">Z</text>
+    </svg>
+    <span style="font-size:22px; font-weight:900; background:linear-gradient(90deg,#a855f7,#ec4899); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Zyra</span>
+</a>
+        <div>
+            <a href="/">Home</a>
+            <a href="/feed">Feed</a>
+            <a href="/announcements">📢 Announcements</a>
+            <a href="/post">Post</a>
+            <a href="/match">Find Teammate</a>
+            <a href="/askzyra">AskZyra</a>
+            {% if session.get('uid') %}
+                <a href="/myposts">My Posts</a>
+                <a href="/profile">Profile</a>
+                <a href="/logout">Logout</a>
+            {% else %}
+                <a href="/login">Login</a>
+                <a href="/signup">Sign Up</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="ai-icon">🤖</div>
+            <h1>AskZyra</h1>
+            <p>Your AI campus assistant — ask anything!</p>
+        </div>
+
+        <!-- Chat History -->
+        {% if question and response %}
+        <div class="chat-history">
+            <div class="user-message">
+                <div class="user-bubble">{{ question }}</div>
+            </div>
+            <div class="ai-message">
+                <div class="ai-avatar">Z</div>
+                <div class="ai-bubble">{{ response }}</div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Quick Questions -->
+        <div class="quick-section">
+            <p>💡 Quick questions:</p>
+            <div class="quick-btns">
+                <button class="quick-btn" onclick="setQ('How to apply for TC in college?')">How to get TC?</button>
+                <button class="quick-btn" onclick="setQ('Best govt jobs for BSc students in Bihar?')">Govt jobs Bihar?</button>
+                <button class="quick-btn" onclick="setQ('How to prepare for BPSC exam?')">BPSC prep?</button>
+                <button class="quick-btn" onclick="setQ('Startup ideas for college students India?')">Startup ideas?</button>
+                <button class="quick-btn" onclick="setQ('How to learn Python for free in 30 days?')">Learn Python?</button>
+                <button class="quick-btn" onclick="setQ('Scholarships available for Bihar students 2026?')">Scholarships?</button>
+                <button class="quick-btn" onclick="setQ('How to make a good resume as a fresher?')">Resume tips?</button>
+            </div>
+        </div>
+
+        <!-- Input Box -->
+        <div class="input-box">
+            <form action="/askzyra" method="POST" onsubmit="showLoading()">
+                <div class="input-row">
+                    <textarea
+                        class="question-input"
+                        name="question"
+                        id="questionInput"
+                        placeholder="Ask AskZyra anything... (college, career, exams, startups)"
+                        required
+                        rows="2"
+                    >{{ question if question }}</textarea>
+                    <button type="submit" class="ask-btn">➤</button>
+                </div>
+            </form>
+            <div class="loading" id="loading">
+                🤖 AskZyra is thinking...
+            </div>
+        </div>
+
+        <!-- Topics -->
+        <div class="topics">
+            <p>AskZyra knows about:</p>
+            <div class="topic-tags">
+                <span class="topic-tag">📝 Exams</span>
+                <span class="topic-tag">💼 Career</span>
+                <span class="topic-tag">🏛️ Govt Jobs</span>
+                <span class="topic-tag">🎓 Higher Studies</span>
+                <span class="topic-tag">💡 Startups</span>
+                <span class="topic-tag">💻 Tech Skills</span>
+                <span class="topic-tag">📜 College Docs</span>
+                <span class="topic-tag">🏆 Competitions</span>
+                <span class="topic-tag">💰 Scholarships</span>
+                <span class="topic-tag">🗣️ Hindi Support</span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function setQ(q) {
+            document.getElementById('questionInput').value = q;
+            document.getElementById('questionInput').focus();
+        }
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+
+        // Auto resize textarea
+        const textarea = document.getElementById('questionInput');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+    </script>
+
+</body>
+</html>

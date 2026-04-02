@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Post - Zyra</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #0a0a0f;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        nav {
+            background-color: rgba(10, 10, 20, 0.95);
+            padding: 18px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #a855f733;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        nav .logo {
+            font-size: 22px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        nav a {
+            color: #cccccc;
+            text-decoration: none;
+            margin-left: 28px;
+            font-size: 15px;
+        }
+
+        nav a:hover { color: #a855f7; }
+
+        .container {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .form-box {
+            background: linear-gradient(135deg, #1a1a2e, #16162a);
+            border: 1px solid #a855f733;
+            border-radius: 16px;
+            padding: 40px;
+        }
+
+        .form-box h2 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-box p {
+            color: #777777;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            color: #aaaaaa;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 14px;
+            background: #0a0a0f;
+            border: 1px solid #a855f733;
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+            margin-bottom: 18px;
+            outline: none;
+            font-family: Arial, sans-serif;
+        }
+
+        textarea { height: 120px; resize: vertical; }
+        input:focus, select:focus, textarea:focus { border-color: #a855f7; }
+        select option { background: #0a0a0f; }
+
+        /* Image Upload */
+        .image-upload-area {
+            border: 2px dashed #a855f733;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .image-upload-area:hover {
+            border-color: #a855f7;
+            background: #a855f711;
+        }
+
+        .image-upload-area input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            margin: 0;
+            padding: 0;
+        }
+
+        .upload-icon { font-size: 36px; margin-bottom: 10px; }
+
+        .upload-text {
+            color: #777777;
+            font-size: 14px;
+        }
+
+        .upload-text span {
+            color: #a855f7;
+            font-weight: bold;
+        }
+
+        #imagePreview {
+            width: 100%;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .optional-badge {
+            display: inline-block;
+            background: #a855f722;
+            color: #a855f7;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn:hover { opacity: 0.9; }
+    </style>
+</head>
+<body>
+
+    <nav>
+<a href="/" style="text-decoration:none; display:flex; align-items:center; gap:8px;">
+    <svg width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="zgrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#a855f7"/>
+                <stop offset="100%" style="stop-color:#ec4899"/>
+            </linearGradient>
+        </defs>
+        <rect width="38" height="38" rx="10" fill="url(#zgrad)"/>
+        <text x="7" y="28" font-family="Arial" font-weight="900" font-size="24" fill="white">Z</text>
+    </svg>
+    <span style="font-size:22px; font-weight:900; background:linear-gradient(90deg,#a855f7,#ec4899); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Zyra</span>
+</a>        <div>
+            <a href="/">Home</a>
+            <a href="/feed">Feed</a>
+            <a href="/announcements">📢 Announcements</a>
+            <a href="/post">Post</a>
+            <a href="/match">Find Teammate</a>
+            <a href="/asksetu">AskSetu</a>
+            {% if session.get('uid') %}
+                <a href="/profile">Profile</a>
+                <a href="/logout">Logout</a>
+            {% else %}
+                <a href="/login">Login</a>
+                <a href="/signup">Sign Up</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="form-box">
+            <h2>📝 Create a Post</h2>
+            <p>Share something with your campus community</p>
+
+            <form action="/post" method="POST" enctype="multipart/form-data">
+
+                <label>Category</label>
+                <select name="category">
+                    <option>📅 Event</option>
+                    <option>🤝 Project Collab</option>
+                    <option>📚 Study Group</option>
+                    <option>💼 Opportunity</option>
+                    <option>😂 Fun</option>
+                    <option>❓ Help Needed</option>
+                    <option>📌 General</option>
+                </select>
+
+                <label>Title</label>
+                <input type="text" name="title" placeholder="Give your post a title" required>
+
+                <label>Description</label>
+                <textarea name="description" placeholder="Write your post here..."></textarea>
+
+                <label>
+                    Image
+                    <span class="optional-badge">Optional</span>
+                </label>
+                <div class="image-upload-area" id="uploadArea">
+                    <input type="file" name="image" accept="image/*" onchange="previewImage(event)">
+                    <div class="upload-icon">🖼️</div>
+                    <div class="upload-text">
+                        Click to upload an image<br>
+                        <span>Browse files</span> — JPG, PNG, GIF supported
+                    </div>
+                    <img id="imagePreview" src="" alt="Preview">
+                </div>
+
+                <button type="submit" class="btn">Post It →</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    document.querySelector('.upload-icon').style.display = 'none';
+                    document.querySelector('.upload-text').style.display = 'none';
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+
+</body>
+</html>

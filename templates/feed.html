@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Feed - Zyra</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #0a0a0f;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        nav {
+            background-color: rgba(10, 10, 20, 0.95);
+            padding: 18px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #a855f733;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        nav .logo {
+            font-size: 22px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav a {
+            color: #cccccc;
+            text-decoration: none;
+            margin-left: 28px;
+            font-size: 15px;
+        }
+
+        nav a:hover { color: #a855f7; }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .section-title {
+            font-size: 30px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-subtitle {
+            color: #777777;
+            margin-bottom: 25px;
+            font-size: 15px;
+        }
+
+        .create-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-size: 15px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .create-btn:hover { opacity: 0.9; }
+
+        .search-bar {
+            width: 100%;
+            padding: 13px 18px;
+            background-color: #1a1a2e;
+            border: 1px solid #a855f733;
+            border-radius: 10px;
+            color: white;
+            font-size: 15px;
+            margin-bottom: 25px;
+            outline: none;
+        }
+
+        .search-bar:focus { border-color: #a855f7; }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 7px 18px;
+            border-radius: 20px;
+            border: 1px solid #a855f733;
+            cursor: pointer;
+            font-size: 13px;
+            background: #1a1a2e;
+            color: #cccccc;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .filter-tab:hover, .filter-tab.active {
+            background: linear-gradient(135deg, #a855f722, #ec489922);
+            border-color: #a855f7;
+            color: #d8a0f7;
+        }
+
+        .post-card {
+            background: linear-gradient(135deg, #1a1a2e, #16162a);
+            border: 1px solid #a855f722;
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .post-card:hover {
+            border-color: #a855f7;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px #a855f722;
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .post-category {
+            background: linear-gradient(135deg, #a855f722, #ec489922);
+            color: #d8a0f7;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            border: 1px solid #a855f755;
+        }
+
+        .post-author { color: #666666; font-size: 13px; }
+
+        .post-card h3 {
+            color: white;
+            font-size: 18px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .post-card p {
+            color: #888888;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 12px;
+            border-top: 1px solid #a855f722;
+        }
+
+        .like-btn, .comment-btn {
+            background: transparent;
+            border: 1px solid #a855f733;
+            color: #d8a0f7;
+            padding: 7px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .like-btn:hover, .comment-btn:hover {
+            background: linear-gradient(135deg, #a855f722, #ec489922);
+            border-color: #a855f7;
+        }
+
+        .comment-form {
+            display: none;
+            flex-direction: column;
+            margin-top: 15px;
+            gap: 8px;
+        }
+
+        .comment-input, .comment-name-input {
+            padding: 10px 14px;
+            background: #0a0a0f;
+            border: 1px solid #a855f733;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            width: 100%;
+        }
+
+        .comment-input:focus, .comment-name-input:focus { border-color: #a855f7; }
+
+        .comment-submit {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            width: 100%;
+        }
+
+        .comments-section {
+            margin-top: 15px;
+            border-top: 1px solid #a855f722;
+            padding-top: 12px;
+        }
+
+        .comment {
+            padding: 8px 12px;
+            background: #0a0a0f;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .comment-author {
+            color: #a855f7;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .comment-text { color: #cccccc; }
+
+        .empty {
+            text-align: center;
+            padding: 60px;
+            color: #555;
+            font-size: 18px;
+        }
+        .delete-btn {
+    background: transparent;
+    border: 1px solid #ff444433;
+    color: #ff6666;
+    padding: 7px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.3s;
+}
+
+.delete-btn:hover {
+    background: #ff444422;
+    border-color: #ff4444;
+}
+    </style>
+</head>
+<body>
+
+   <nav>
+    <a href="/" style="text-decoration:none; display:flex; align-items:center; gap:8px;">
+        <svg width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="zgrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#a855f7"/>
+                    <stop offset="100%" style="stop-color:#ec4899"/>
+                </linearGradient>
+            </defs>
+            <rect width="38" height="38" rx="10" fill="url(#zgrad)"/>
+            <text x="7" y="28" font-family="Arial" font-weight="900" font-size="24" fill="white">Z</text>
+        </svg>
+        <span style="font-size:22px; font-weight:900; background:linear-gradient(90deg,#a855f7,#ec4899); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Zyra</span>
+    </a>
+    <div>
+        <a href="/">Home</a>
+        <a href="/feed">Feed</a>
+        <a href="/announcements">📢 Announcements</a>
+        <a href="/post">Post</a>
+        <a href="/match">Find Teammate</a>
+        <a href="/askzyra">AskZyra 🤖</a>
+        {% if session.get('uid') %}
+            <a href="/myposts">My Posts</a>
+            <a href="/profile">Profile</a>
+            <a href="/logout">Logout</a>
+        {% else %}
+            <a href="/login">Login</a>
+            <a href="/signup">Sign Up</a>
+        {% endif %}
+    </div>
+</nav>
+
+    <div class="container">
+
+        <div class="feed-header">
+            <h2 class="section-title">📢 Community Feed</h2>
+            <a href="/post" class="create-btn">+ Create Post</a>
+        </div>
+        <p class="section-subtitle">{{ posts|length }} post(s) from your campus</p>
+
+        <input
+            type="text"
+            class="search-bar"
+            id="searchBar"
+            placeholder="🔍 Search posts..."
+            onkeyup="searchPosts()"
+        >
+
+        <div class="filter-tabs">
+            <a class="filter-tab active" onclick="filterPosts('all', event)">All</a>
+            <a class="filter-tab" onclick="filterPosts('Event', event)">📅 Events</a>
+            <a class="filter-tab" onclick="filterPosts('Project', event)">🤝 Projects</a>
+            <a class="filter-tab" onclick="filterPosts('Study', event)">📚 Study</a>
+            <a class="filter-tab" onclick="filterPosts('Opportunity', event)">💼 Opportunities</a>
+            <a class="filter-tab" onclick="filterPosts('Fun', event)">😂 Fun</a>
+        </div>
+
+        <div id="postsContainer">
+        {% if posts %}
+            {% for post in posts %}
+            <div class="post-card" data-category="{{ post.category }}">
+
+                <div class="post-header">
+                    <span class="post-category">{{ post.category }}</span>
+                    <span class="post-author">by {{ post.author }}</span>
+                </div>
+
+                <h3>{{ post.title }}</h3>
+                <p>{{ post.description }}</p>
+{% if post.image_url %}
+<div style="margin-top: 12px;">
+    <img src="{{ post.image_url }}"
+         alt="Post image"
+         style="width: 100%; border-radius: 12px; max-height: 400px; object-fit: cover; border: 1px solid #a855f722;">
+</div>
+{% endif %}
+                <!-- Actions -->
+               <!-- Actions -->
+<div class="post-actions">
+    <form action="/like/{{ post.id }}" method="POST" style="display:inline">
+        <button type="submit" class="like-btn">❤️ {{ post.likes }} Likes</button>
+    </form>
+    {% if post.author != "Zyra Bot 🤖" %}
+    <button class="comment-btn" onclick="toggleComment('{{ post.id }}')">
+        💬 {{ post.comments|length }} Comments
+    </button>
+    {% endif %}
+    {% if session.get('name') == post.author %}
+    <form action="/delete-post/{{ post.id }}" method="POST" style="display:inline"
+        onsubmit="return confirm('Delete this post?')">
+        <button type="submit" class="delete-btn">🗑️ Delete</button>
+    </form>
+    {% endif %}
+</div>
+
+                <!-- Comment Form — student posts only -->
+                {% if post.author != "Zyra Bot 🤖" %}
+                <div id="comment-{{ post.id }}" class="comment-form">
+                    <form action="/comment/{{ post.id }}" method="POST">
+                        <input class="comment-name-input" type="text" name="author" placeholder="Your name..." required>
+                        <input class="comment-input" type="text" name="comment" placeholder="Write a comment..." required>
+                        <button type="submit" class="comment-submit">Post Comment →</button>
+                    </form>
+                </div>
+
+                <!-- Show Comments -->
+                {% if post.comments %}
+                <div class="comments-section">
+                    {% for comment in post.comments %}
+                    <div class="comment">
+                        <span class="comment-author">👤 {{ comment.author }}</span>
+                        <span class="comment-text">{{ comment.text }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% endif %}
+
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty">
+                No posts yet. Be the first to post! 🚀
+            </div>
+        {% endif %}
+        </div>
+
+    </div>
+
+    <script>
+        function toggleComment(postId) {
+            const div = document.getElementById('comment-' + postId);
+            if (div.style.display === 'none' || div.style.display === '') {
+                div.style.display = 'flex';
+                div.style.flexDirection = 'column';
+            } else {
+                div.style.display = 'none';
+            }
+        }
+
+        function searchPosts() {
+            const query = document.getElementById('searchBar').value.toLowerCase();
+            const cards = document.querySelectorAll('.post-card');
+            cards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                card.style.display = text.includes(query) ? 'block' : 'none';
+            });
+        }
+
+        function filterPosts(category, event) {
+            const cards = document.querySelectorAll('.post-card');
+            const tabs = document.querySelectorAll('.filter-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            cards.forEach(card => {
+                if (category === 'all') {
+                    card.style.display = 'block';
+                } else {
+                    const cardCategory = card.getAttribute('data-category');
+                    card.style.display = cardCategory.includes(category) ? 'block' : 'none';
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

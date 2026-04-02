@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile - Zyra</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #0a0a0f;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        nav {
+            background-color: rgba(10, 10, 20, 0.95);
+            padding: 18px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #a855f733;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        nav .logo {
+            font-size: 22px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        nav a {
+            color: #cccccc;
+            text-decoration: none;
+            margin-left: 28px;
+            font-size: 15px;
+        }
+
+        nav a:hover { color: #a855f7; }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            background: linear-gradient(135deg, #1a1a2e, #16162a);
+            border: 1px solid #a855f733;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .avatar {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .profile-info h2 {
+            font-size: 26px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 5px;
+        }
+
+        .profile-info p {
+            color: #777777;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .profile-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .meta-tag {
+            background: linear-gradient(135deg, #a855f722, #ec489922);
+            color: #d8a0f7;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            border: 1px solid #a855f755;
+        }
+
+        .skills-section {
+            margin-top: 15px;
+        }
+
+        .skill-tag {
+            display: inline-block;
+            background: #a855f722;
+            color: #d8a0f7;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-right: 6px;
+            margin-top: 5px;
+            border: 1px solid #a855f744;
+        }
+
+        .edit-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        /* My Posts */
+        .section-title {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+
+        .post-card {
+            background: linear-gradient(135deg, #1a1a2e, #16162a);
+            border: 1px solid #a855f722;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .post-card:hover {
+            border-color: #a855f7;
+            transform: translateY(-2px);
+        }
+
+        .post-category {
+            background: linear-gradient(135deg, #a855f722, #ec489922);
+            color: #d8a0f7;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            border: 1px solid #a855f755;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .post-card h3 {
+            color: white;
+            font-size: 17px;
+            margin-bottom: 6px;
+        }
+
+        .post-card p {
+            color: #888888;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #555;
+            font-size: 16px;
+        }
+
+        .logout-btn {
+            display: inline-block;
+            background: transparent;
+            color: #ff6666;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-left: 10px;
+            border: 1px solid #ff666644;
+        }
+
+        .logout-btn:hover {
+            background: #ff444422;
+            border-color: #ff6666;
+        }
+    </style>
+</head>
+<body>
+
+ <nav>
+    <a href="/" style="text-decoration:none; display:flex; align-items:center; gap:8px;">
+        <svg width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="zgrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#a855f7"/>
+                    <stop offset="100%" style="stop-color:#ec4899"/>
+                </linearGradient>
+            </defs>
+            <rect width="38" height="38" rx="10" fill="url(#zgrad)"/>
+            <text x="7" y="28" font-family="Arial" font-weight="900" font-size="24" fill="white">Z</text>
+        </svg>
+        <span style="font-size:22px; font-weight:900; background:linear-gradient(90deg,#a855f7,#ec4899); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Zyra</span>
+    </a>
+    <div>
+        <a href="/">Home</a>
+        <a href="/feed">Feed</a>
+        <a href="/announcements">📢 Announcements</a>
+        <a href="/post">Post</a>
+        <a href="/match">Find Teammate</a>
+        <a href="/askzyra">AskZyra 🤖</a>
+        {% if session.get('uid') %}
+            <a href="/myposts">My Posts</a>
+            <a href="/profile">Profile</a>
+            <a href="/logout">Logout</a>
+        {% else %}
+            <a href="/login">Login</a>
+            <a href="/signup">Sign Up</a>
+        {% endif %}
+    </div>
+</nav>
+    <div class="container">
+
+        <!-- Profile Card -->
+        <div class="profile-card">
+            <div class="avatar">{{ student.name[0].upper() }}</div>
+            <div class="profile-info">
+                <h2>{{ student.name }}</h2>
+                <p>{{ student.email }}</p>
+                <div class="profile-meta">
+                    <span class="meta-tag">🎓 {{ student.branch }}</span>
+                    <span class="meta-tag">📅 {{ student.semester }} Semester</span>
+                </div>
+                <div class="skills-section">
+                    {% for skill in student.skills.split(',') %}
+                    <span class="skill-tag">{{ skill.strip() }}</span>
+                    {% endfor %}
+                </div>
+                <a href="/edit-profile" class="edit-btn">✏️ Edit Profile</a>
+                <a href="/logout" class="logout-btn">🚪 Logout</a>
+            </div>
+        </div>
+
+        <!-- My Posts -->
+        <h2 class="section-title">📝 My Posts</h2>
+
+        {% if my_posts %}
+            {% for post in my_posts %}
+            <div class="post-card">
+                <span class="post-category">{{ post.category }}</span>
+                <h3>{{ post.title }}</h3>
+                <p>{{ post.description }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty">
+                You haven't posted anything yet. <a href="/post" style="color:#a855f7">Create your first post →</a>
+            </div>
+        {% endif %}
+
+    </div>
+
+</body>
+</html>

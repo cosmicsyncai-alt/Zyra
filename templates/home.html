@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Zyra</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #0a0a0f;
+            color: white;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* Animated gradient background */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px #a855f755; }
+            50% { box-shadow: 0 0 40px #ec4899aa; }
+        }
+
+        /* Navigation */
+        nav {
+            background-color: rgba(10, 10, 20, 0.95);
+            padding: 18px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #a855f733;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        nav .logo {
+            font-size: 22px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav a {
+            color: #cccccc;
+            text-decoration: none;
+            margin-left: 28px;
+            font-size: 15px;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #a855f7;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 130px 50px 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at center, #a855f711 0%, transparent 60%),
+                        radial-gradient(ellipse at 80% 20%, #ec489911 0%, transparent 50%);
+            animation: gradientShift 8s ease infinite;
+            background-size: 200% 200%;
+        }
+
+        .hero .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #a855f722, #ec489922);
+            color: #d8a0f7;
+            padding: 7px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            border: 1px solid #a855f744;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 62px;
+            color: white;
+            margin-bottom: 25px;
+            line-height: 1.15;
+            position: relative;
+            font-weight: 800;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 19px;
+            color: #999999;
+            margin-bottom: 45px;
+            max-width: 580px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+            position: relative;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            color: white;
+            padding: 15px 38px;
+            border-radius: 10px;
+            font-size: 17px;
+            text-decoration: none;
+            font-weight: bold;
+            animation: glow 3s ease-in-out infinite;
+            transition: transform 0.2s;
+        }
+
+        .btn-primary:hover { transform: translateY(-2px); }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #a855f7;
+            padding: 15px 38px;
+            border-radius: 10px;
+            font-size: 17px;
+            text-decoration: none;
+            font-weight: bold;
+            border: 2px solid #a855f7;
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #a855f722, #ec489922);
+            transform: translateY(-2px);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 100px 50px;
+            text-align: center;
+        }
+
+        .features .section-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #a855f722, #ec489922);
+            color: #d8a0f7;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            border: 1px solid #a855f744;
+            margin-bottom: 20px;
+        }
+
+        .features h2 {
+            font-size: 40px;
+            color: white;
+            margin-bottom: 12px;
+            font-weight: 800;
+        }
+
+        .features h2 span {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .features > p {
+            color: #888888;
+            margin-bottom: 60px;
+            font-size: 16px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            max-width: 1050px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #1a1a2e, #16162a);
+            border: 1px solid #a855f722;
+            border-radius: 16px;
+            padding: 32px 25px;
+            text-align: left;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: #a855f7;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px #a855f722;
+        }
+
+        .feature-card .icon {
+            font-size: 38px;
+            margin-bottom: 18px;
+        }
+
+        .feature-card h3 {
+            color: white;
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            color: #888888;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* Stats Section */
+        .stats {
+            background: linear-gradient(135deg, #1a1a2e, #16162a);
+            padding: 70px 50px;
+            text-align: center;
+            border-top: 1px solid #a855f722;
+            border-bottom: 1px solid #a855f722;
+        }
+
+        .stats-grid {
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+            flex-wrap: wrap;
+        }
+
+        .stat h3 {
+            font-size: 44px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat p {
+            color: #888888;
+            font-size: 15px;
+            margin-top: 6px;
+        }
+
+        /* How it works */
+        .how {
+            padding: 100px 50px;
+            text-align: center;
+        }
+
+        .how .section-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #a855f722, #ec489922);
+            color: #d8a0f7;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            border: 1px solid #a855f744;
+            margin-bottom: 20px;
+        }
+
+        .how h2 {
+            font-size: 40px;
+            color: white;
+            margin-bottom: 12px;
+            font-weight: 800;
+        }
+
+        .how h2 span {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .how > p {
+            color: #888888;
+            margin-bottom: 60px;
+            font-size: 16px;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .step {
+            flex: 1;
+            min-width: 220px;
+            background: linear-gradient(135deg, #1a1a2e, #16162a);
+            border: 1px solid #a855f722;
+            border-radius: 16px;
+            padding: 35px 25px;
+            position: relative;
+        }
+
+        .step .number {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0 auto 20px;
+        }
+
+        .step h3 {
+            color: white;
+            font-size: 17px;
+            margin-bottom: 10px;
+        }
+
+        .step p {
+            color: #888888;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta {
+            text-align: center;
+            padding: 110px 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(ellipse at center, #a855f711 0%, transparent 60%);
+        }
+
+        .cta h2 {
+            font-size: 44px;
+            color: white;
+            margin-bottom: 15px;
+            font-weight: 800;
+            position: relative;
+        }
+
+        .cta h2 span {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cta p {
+            color: #888888;
+            font-size: 18px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #0a0a0f;
+            border-top: 1px solid #a855f722;
+            padding: 30px 50px;
+            text-align: center;
+            color: #555555;
+            font-size: 14px;
+        }
+
+        footer span {
+            background: linear-gradient(135deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+   <nav>
+    <a href="/" style="text-decoration:none; display:flex; align-items:center; gap:8px;">
+        <svg width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="zgrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#a855f7"/>
+                    <stop offset="100%" style="stop-color:#ec4899"/>
+                </linearGradient>
+            </defs>
+            <rect width="38" height="38" rx="10" fill="url(#zgrad)"/>
+            <text x="7" y="28" font-family="Arial" font-weight="900" font-size="24" fill="white">Z</text>
+        </svg>
+        <span style="font-size:22px; font-weight:900; background:linear-gradient(90deg,#a855f7,#ec4899); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Zyra</span>
+    </a>
+    <div>
+        <a href="/">Home</a>
+        <a href="/feed">Feed</a>
+        <a href="/announcements">📢 Announcements</a>
+        <a href="/post">Post</a>
+        <a href="/match">Find Teammate</a>
+        <a href="/askzyra">AskZyra 🤖</a>
+        {% if session.get('uid') %}
+            <a href="/myposts">My Posts</a>
+            <a href="/profile">Profile</a>
+            <a href="/logout">Logout</a>
+        {% else %}
+            <a href="/login">Login</a>
+            <a href="/signup">Sign Up</a>
+        {% endif %}
+    </div>
+</nav>
+
+    <!-- Hero -->
+    <div class="hero">
+        <div class="badge">✨ AI Powered Campus Community</div>
+        <h1>Where<br>Campus Comes<span> Alive</span></h1>
+        <p>Connect with students, find teammates, discover opportunities — all powered by AI. Built exclusively for your campus.</p>
+        <div class="hero-buttons">
+           <a href="/signup" class="btn-primary">Join Now →</a>
+            <a href="/feed" class="btn-secondary">View Feed</a>
+        </div>
+    </div>
+
+    <!-- Features -->
+    <div class="features">
+        <div class="section-badge">⚡ Features</div>
+        <h2>Everything your campus <span>needs</span></h2>
+        <p>One intelligent platform for your entire college community.</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="icon">🤖</div>
+                <h3>AI Teammate Finder</h3>
+                <p>Tell AI what skills you need — it instantly finds the best match from your campus community.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">📢</div>
+                <h3>Community Feed</h3>
+                <p>Post events, projects, study groups and opportunities. Stay connected with your campus.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">⚡</div>
+                <h3>Auto Opportunities</h3>
+                <p>Hackathons, internships and scholarships fetched automatically every day. Never miss out.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon">🎓</div>
+                <h3>Skill Profiles</h3>
+                <p>Showcase your skills, branch and semester. Let the right people find you.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+        <div class="stats-grid">
+            <div class="stat">
+                <h3>∞</h3>
+                <p>Opportunities Daily</p>
+            </div>
+            <div class="stat">
+                <h3>AI</h3>
+                <p>Powered Matching</p>
+            </div>
+            <div class="stat">
+                <h3>₹0</h3>
+                <p>Free for Students</p>
+            </div>
+            <div class="stat">
+                <h3>24/7</h3>
+                <p>Always Available</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- How it Works -->
+    <div class="how">
+        <div class="section-badge">🗺️ How It Works</div>
+        <h2>Get started in <span>3 simple steps</span></h2>
+        <p>No complicated setup. Just sign up and start connecting.</p>
+        <div class="steps">
+            <div class="step">
+                <div class="number">1</div>
+                <h3>Create Your Profile</h3>
+                <p>Register with your branch, semester and skills in under 2 minutes.</p>
+            </div>
+            <div class="step">
+                <div class="number">2</div>
+                <h3>Explore the Feed</h3>
+                <p>Discover events, projects, opportunities auto-fetched every day.</p>
+            </div>
+            <div class="step">
+                <div class="number">3</div>
+                <h3>Find Your Team</h3>
+                <p>Use AI to find the perfect teammate for your next big project.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta">
+        <h2>Ready to find your <span>dream team?</span></h2>
+        <p>Join ProjectSetu and never miss an opportunity again.</p>
+       <a href="/signup" class="btn-primary">Get Started Free →</a>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        Built with ❤️ by <span>Anand Bipul</span> — Zyra Where Campus Comes Alive © 2026
+    </footer>
+
+</body>
+</html>

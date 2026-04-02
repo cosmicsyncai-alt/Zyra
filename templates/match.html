@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Find Teammate - Zyra</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #0f0f0f;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        nav {
+            background-color: #1a1a1a;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #00d4ff;
+        }
+
+        nav .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 25px;
+            font-size: 16px;
+        }
+
+        nav a:hover { color: #00d4ff; }
+
+        .container {
+            max-width: 700px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .container h2 {
+            color: #00d4ff;
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .container p {
+            color: #aaaaaa;
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            background-color: #1a1a1a;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid #00d4ff;
+            margin-bottom: 30px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            background-color: #0f0f0f;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #00d4ff;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background-color: #00d4ff;
+            color: black;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn:hover { background-color: #00a8cc; }
+
+        .result-box {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .result-box h3 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .result-box p {
+            color: #cccccc;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        .ai-badge {
+            display: inline-block;
+            background-color: #00d4ff22;
+            color: #00d4ff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            border: 1px solid #00d4ff55;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+   <nav>
+    <a href="/" style="text-decoration:none; display:flex; align-items:center; gap:8px;">
+        <svg width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="zgrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#a855f7"/>
+                    <stop offset="100%" style="stop-color:#ec4899"/>
+                </linearGradient>
+            </defs>
+            <rect width="38" height="38" rx="10" fill="url(#zgrad)"/>
+            <text x="7" y="28" font-family="Arial" font-weight="900" font-size="24" fill="white">Z</text>
+        </svg>
+        <span style="font-size:22px; font-weight:900; background:linear-gradient(90deg,#a855f7,#ec4899); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Zyra</span>
+    </a>
+    <div>
+        <a href="/">Home</a>
+        <a href="/feed">Feed</a>
+        <a href="/announcements">📢 Announcements</a>
+        <a href="/post">Post</a>
+        <a href="/match">Find Teammate</a>
+        <a href="/askzyra">AskZyra 🤖</a>
+        {% if session.get('uid') %}
+            <a href="/myposts">My Posts</a>
+            <a href="/profile">Profile</a>
+            <a href="/logout">Logout</a>
+        {% else %}
+            <a href="/login">Login</a>
+            <a href="/signup">Sign Up</a>
+        {% endif %}
+    </div>
+</nav>
+
+    <div class="container">
+        <h2>🤖 AI Teammate Finder</h2>
+        <p>Tell AI what you need — it will find the best match from our community.</p>
+
+        <div class="search-box">
+            <form action="/match" method="POST">
+                <input 
+                    type="text" 
+                    name="query" 
+                    placeholder="e.g. I need someone who knows Python and Machine Learning"
+                    value="{{ query if query }}"
+                    required
+                >
+                <button type="submit" class="btn">🔍 Find My Teammate</button>
+            </form>
+        </div>
+
+        {% if result %}
+        <div class="result-box">
+            <span class="ai-badge">✨ AI Powered</span>
+            <h3>Best Matches Found:</h3>
+            <p>{{ result }}</p>
+        </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>

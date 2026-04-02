@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register - Zyra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0f0f0f;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        nav {
+            background-color: #1a1a1a;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #00d4ff;
+        }
+
+        nav .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 25px;
+            font-size: 16px;
+        }
+
+        nav a:hover {
+            color: #00d4ff;
+        }
+
+        .form-container {
+            max-width: 500px;
+            margin: 60px auto;
+            background-color: #1a1a1a;
+            padding: 40px;
+            border-radius: 12px;
+            border: 1px solid #00d4ff;
+        }
+
+        .form-container h2 {
+            text-align: center;
+            color: #00d4ff;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #aaaaaa;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            background-color: #0f0f0f;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: white;
+            font-size: 15px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #00d4ff;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background-color: #00d4ff;
+            color: black;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #00a8cc;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+<a href="/" style="text-decoration:none; display:flex; align-items:center; gap:8px;">
+    <svg width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="zgrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#a855f7"/>
+                <stop offset="100%" style="stop-color:#ec4899"/>
+            </linearGradient>
+        </defs>
+        <rect width="38" height="38" rx="10" fill="url(#zgrad)"/>
+        <text x="7" y="28" font-family="Arial" font-weight="900" font-size="24" fill="white">Z</text>
+    </svg>
+    <span style="font-size:22px; font-weight:900; background:linear-gradient(90deg,#a855f7,#ec4899); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Zyra</span>
+</a>       <div>
+            <a href="/">Home</a>
+            <a href="/register">Register</a>
+            <a href="/feed">Feed</a>
+            <a href="/about">About</a>
+        </div>
+    </nav>
+
+    <div class="form-container">
+        <h2>Join Zyra</h2>
+
+        <form action="/register" method="POST">
+            <label>Full Name</label>
+            <input type="text" name="name" placeholder="Enter your name" required>
+
+            <label>Email</label>
+            <input type="email" name="email" placeholder="Enter your email" required>
+
+            <label>Branch</label>
+            <select name="branch">
+                <option>Computer Science</option>
+                <option>BSc</option>
+                <option>Electronics</option>
+                <option>Mechanical</option>
+                <option>Civil</option>
+                <option>BBA</option>
+                <option>BCA</option>
+                <option>Other</option>
+            </select>
+
+            <label>Semester</label>
+            <select name="semester">
+                <option>1st</option>
+                <option>2nd</option>
+                <option>3rd</option>
+                <option>4th</option>
+                <option>5th</option>
+                <option>6th</option>
+                <option>7th</option>
+                <option>8th</option>
+            </select>
+
+            <label>Your Skills (comma separated)</label>
+            <input type="text" name="skills" placeholder="e.g. Python, Design, Video Editing">
+
+            <button type="submit" class="btn">Register →</button>
+        </form>
+    </div>
+
+</body>
+</html>
