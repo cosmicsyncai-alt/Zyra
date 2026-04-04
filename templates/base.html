@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Zyra{% endblock %}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #0a0a0f;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        /* ─── NAVBAR ─── */
+        nav {
+            background-color: rgba(10, 10, 20, 0.95);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #a855f733;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-logo {
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .nav-logo span {
+            font-size: 22px;
+            font-weight: 900;
+            background: linear-gradient(90deg, #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: #cccccc;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .nav-links a:hover {
+            color: #a855f7;
+            background: #a855f711;
+        }
+
+        /* Hamburger */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 5px;
+            background: none;
+            border: none;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 2px;
+            background: #a855f7;
+            border-radius: 2px;
+            transition: all 0.3s;
+            display: block;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 75%;
+            max-width: 300px;
+            height: 100vh;
+            background: #0a0a0f;
+            border-left: 1px solid #a855f733;
+            z-index: 999;
+            padding: 80px 25px 30px;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+        }
+
+        .mobile-menu.open { display: flex; }
+
+        .mobile-menu a {
+            color: #cccccc;
+            text-decoration: none;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 16px;
+            border: 1px solid #a855f722;
+            transition: all 0.3s;
+        }
+
+        .mobile-menu a:hover {
+            color: #a855f7;
+            background: #a855f711;
+            border-color: #a855f7;
+        }
+
+        .mobile-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #a855f7;
+            font-size: 28px;
+            cursor: pointer;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 998;
+        }
+
+        .overlay.open { display: block; }
+
+        /* ─── MOBILE RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            nav { padding: 12px 16px; }
+            .nav-links { display: none; }
+            .hamburger { display: flex; }
+
+            /* Container */
+            .container {
+                padding: 0 16px !important;
+                margin: 20px auto !important;
+            }
+
+            /* Cards */
+            .post-card, .ann-card, .conv-card,
+            .profile-card, .form-box, .chat-header {
+                padding: 16px !important;
+                border-radius: 12px !important;
+            }
+
+            /* Profile card stack on mobile */
+            .profile-card {
+                flex-direction: column !important;
+                text-align: center !important;
+            }
+
+            /* Hero */
+            .hero {
+                padding: 60px 20px 50px !important;
+            }
+
+            .hero h1 {
+                font-size: 36px !important;
+            }
+
+            .hero p {
+                font-size: 16px !important;
+            }
+
+            .hero-buttons {
+                flex-direction: column !important;
+                align-items: center !important;
+            }
+
+            /* Features grid */
+            .features-grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Stats */
+            .stats-grid {
+                gap: 30px !important;
+            }
+
+            /* Steps */
+            .steps {
+                flex-direction: column !important;
+            }
+
+            /* Feed header */
+            .feed-header {
+                flex-direction: column !important;
+                gap: 12px !important;
+                align-items: flex-start !important;
+            }
+
+            /* Filter tabs scroll */
+            .filter-tabs {
+                overflow-x: auto !important;
+                flex-wrap: nowrap !important;
+                padding-bottom: 5px !important;
+            }
+
+            /* Post actions wrap */
+            .post-actions {
+                flex-wrap: wrap !important;
+            }
+
+            /* Chat */
+            .chat-container {
+                padding: 0 12px !important;
+                margin: 15px auto !important;
+            }
+
+            /* Forms */
+            input, select, textarea {
+                font-size: 16px !important;
+            }
+
+            /* Buttons */
+            .btn-primary, .btn-secondary {
+                width: 100% !important;
+                text-align: center !important;
+            }
+
+            /* Section titles */
+            .section-title, h2 {
+                font-size: 22px !important;
+            }
+
+            /* Features padding */
+            .features, .how, .cta, .stats {
+                padding: 50px 20px !important;
+            }
+
+            .features h2, .how h2, .cta h2 {
+                font-size: 28px !important;
+            }
+        }
+
+        /* ─── SHARED STYLES ─── */
+        {% block styles %}{% endblock %}
+    </style>
+</head>
+<body>
+
+    <!-- Desktop Nav -->
+    <nav>
+        <a href="/" class="nav-logo">
+            <svg width="36" height="36" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="zgrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#a855f7"/>
+                        <stop offset="100%" style="stop-color:#ec4899"/>
+                    </linearGradient>
+                </defs>
+                <rect width="38" height="38" rx="10" fill="url(#zgrad)"/>
+                <text x="7" y="28" font-family="Arial" font-weight="900" font-size="24" fill="white">Z</text>
+            </svg>
+            <span>Zyra</span>
+        </a>
+
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/feed">Feed</a>
+            <a href="/announcements">📢</a>
+            <a href="/post">Post</a>
+            <a href="/match">Find Teammate</a>
+            <a href="/askzyra">AskZyra 🤖</a>
+            {% if session.get('uid') %}
+                <a href="/messages">💬</a>
+                <a href="/myposts">My Posts</a>
+                <a href="/profile">Profile</a>
+                <a href="/logout">Logout</a>
+            {% else %}
+                <a href="/login">Login</a>
+                <a href="/signup">Sign Up</a>
+            {% endif %}
+        </div>
+
+        <!-- Hamburger -->
+        <button class="hamburger" onclick="openMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="overlay" id="overlay" onclick="closeMenu()"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-close" onclick="closeMenu()">✕</button>
+        <a href="/" onclick="closeMenu()">🏠 Home</a>
+        <a href="/feed" onclick="closeMenu()">📢 Feed</a>
+        <a href="/announcements" onclick="closeMenu()">📢 Announcements</a>
+        <a href="/post" onclick="closeMenu()">✏️ Create Post</a>
+        <a href="/match" onclick="closeMenu()">🤝 Find Teammate</a>
+        <a href="/askzyra" onclick="closeMenu()">🤖 AskZyra</a>
+        {% if session.get('uid') %}
+            <a href="/messages" onclick="closeMenu()">💬 Messages</a>
+            <a href="/myposts" onclick="closeMenu()">📝 My Posts</a>
+            <a href="/profile" onclick="closeMenu()">👤 Profile</a>
+            <a href="/logout" onclick="closeMenu()">🚪 Logout</a>
+        {% else %}
+            <a href="/login" onclick="closeMenu()">🔑 Login</a>
+            <a href="/signup" onclick="closeMenu()">🚀 Sign Up</a>
+        {% endif %}
+    </div>
+
+    <!-- Page Content -->
+    {% block content %}{% endblock %}
+
+    <script>
+        function openMenu() {
+            document.getElementById('mobileMenu').classList.add('open');
+            document.getElementById('overlay').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            document.getElementById('mobileMenu').classList.remove('open');
+            document.getElementById('overlay').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+    </script>
+
+    {% block scripts %}{% endblock %}
+
+</body>
+</html>

@@ -291,12 +291,13 @@ def api_add_post():
 def match():
     result = None
     query = None
-    students = []
+    matched_students = []
 
     if request.method == "POST":
         query = request.form["query"]
 
         students_ref = db.collection("students").stream()
+        students = []
         for s in students_ref:
             students.append(s.to_dict())
 
@@ -311,7 +312,10 @@ def match():
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a helpful assistant that matches students based on skills. Be friendly and specific."
+                    "content": """You are a helpful assistant that matches students based on skills.
+At the end of your response, always add a line like this:
+MATCHED: StudentName1, StudentName2
+Only include names that are the best matches from the list."""
                 },
                 {
                     "role": "user",
@@ -320,15 +324,31 @@ def match():
             ]
         )
 
-        result = response.choices[0].message.content
+        full_response = response.choices[0].message.content
 
-    else:
-        students_ref = db.collection("students").stream()
-        for s in students_ref:
-            students.append(s.to_dict())
+        # Extract matched names
+        matched_names = []
+        if "MATCHED:" in full_response:
+            parts = full_response.split("MATCHED:")
+            result = parts[0].strip()
+            names_part = parts[1].strip()
+            matched_names = [n.strip() for n in names_part.split(",")]
+        else:
+            result = full_response
 
-    return render_template("match.html", result=result, query=query, students=students, session=session)
+        # Find matched students from database
+        for s in students:
+            for name in matched_names:
+                if name.lower() in s["name"].lower() or s["name"].lower() in name.lower():
+                    if s.get("uid") != session.get("uid"):
+                        matched_students.append(s)
 
+    return render_template("match.html",
+        result=result,
+        query=query,
+        matched_students=matched_students,
+        session=session
+    )
 
 # ─── ANNOUNCEMENTS ────────────────────────────────
 @app.route("/announcements")
