@@ -12,8 +12,13 @@ import pyrebase
 
 # Firebase Admin (for database)
 import json
-firebase_creds = json.loads(os.getenv("FIREBASE_CREDENTIALS"))
-cred = credentials.Certificate(firebase_creds)
+if os.getenv("FIREBASE_CREDENTIALS"):
+    # On Render — use environment variable
+    firebase_creds = json.loads(os.getenv("FIREBASE_CREDENTIALS"))
+    cred = credentials.Certificate(firebase_creds)
+else:
+    # Local — use firebase_key.json file
+    cred = credentials.Certificate("firebase_key.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
@@ -177,15 +182,19 @@ def post():
 
         new_post = {
             "author": session["name"],
+            "author_uid": session["uid"],
             "category": request.form["category"],
             "title": request.form["title"],
             "description": request.form["description"],
             "image_url": image_url,
             "likes": 0,
-            "comments": []
+            "comments": [],
+            "time": datetime.now().strftime("%d %b %Y, %I:%M %p")
         }
+
         db.collection("posts").add(new_post)
         return redirect("/feed")
+
     return render_template("post.html")
 
 
@@ -200,6 +209,9 @@ def feed():
         post_data["likes"] = post_data.get("likes", 0)
         post_data["comments"] = post_data.get("comments", [])
         posts.append(post_data)
+
+    # Sort by time — newest first
+    posts.reverse()
 
     students_ref = db.collection("students").stream()
     students = []
@@ -407,7 +419,141 @@ def myposts():
         total_comments=total_comments,
         session=session
     )
+# ─── MESSAGES ─────────────────────────────────────
+@app.route("/messages")
+def messages():
+    if "uid" not in session:
+        return redirect("/login")
+
+    uid = session["uid"]
+
+    # Get all conversations involving this user
+    sent = db.collection("messages").where("sender_uid", "==", uid).stream()
+    received = db.collection("messages").where("receiver_uid", "==", uid).stream()
+
+    conversations = {}
+
+    for msg in sent:
+        data = msg.to_dict()
+        other_uid = data["receiver_uid"]
+        other_name = data["receiver_name"]
+        if other_uid not in conversations:
+            conversations[other_uid] = {
+                "name": other_name,
+                "uid": other_uid,
+                "last_message": data["text"],
+                "time": data["time"]
+            }
+
+    for msg in received:
+        data = msg.to_dict()
+        other_uid = data["sender_uid"]
+        other_name = data["sender_name"]
+        if other_uid not in conversations:
+            conversations[other_uid] = {
+                "name": other_name,
+                "uid": other_uid,
+                "last_message": data["text"],
+                "time": data["time"]
+            }
+
+    return render_template("messages.html",
+        conversations=list(conversations.values()),
+        session=session
+    )
 
 
+@app.route("/chat/<receiver_uid>", methods=["GET", "POST"])
+def chat(receiver_uid):
+    if "uid" not in session:
+        return redirect("/login")
+
+    uid = session["uid"]
+
+    # Get receiver info
+    receiver = db.collection("students").document(receiver_uid).get()
+    if not receiver.exists:
+        return redirect("/messages")
+
+    receiver_data = receiver.to_dict()
+
+    if request.method == "POST":
+        text = request.form["text"]
+        if text.strip():
+            db.collection("messages").add({
+                "sender_uid": uid,
+                "sender_name": session["name"],
+                "receiver_uid": receiver_uid,
+                "receiver_name": receiver_data["name"],
+                "text": text,
+                "time": datetime.now().strftime("%d %b %Y, %I:%M %p")
+            })
+        return redirect(f"/chat/{receiver_uid}")
+
+    # Get all messages between these two users
+    sent = db.collection("messages")\
+        .where("sender_uid", "==", uid)\
+        .where("receiver_uid", "==", receiver_uid)\
+        .stream()
+
+    received = db.collection("messages")\
+        .where("sender_uid", "==", receiver_uid)\
+        .where("receiver_uid", "==", uid)\
+        .stream()
+
+    chat_messages = []
+    for msg in sent:
+        data = msg.to_dict()
+        data["is_me"] = True
+        chat_messages.append(data)
+
+    for msg in received:
+        data = msg.to_dict()
+        data["is_me"] = False
+        chat_messages.append(data)
+
+    # Sort by time
+    chat_messages.sort(key=lambda x: x["time"])
+
+    return render_template("chat.html",
+        receiver=receiver_data,
+        messages=chat_messages,
+        session=session
+    )
+
+
+@app.route("/send-message/<receiver_uid>")
+def send_message_page(receiver_uid):
+    if "uid" not in session:
+        return redirect("/login")
+    return redirect(f"/chat/{receiver_uid}")
+
+
+    
+
+# ─── STUDENT PROFILE ──────────────────────────────
+@app.route("/student/<student_uid>")
+def student_profile(student_uid):
+    if "uid" not in session:
+        return redirect("/login")
+
+    student = db.collection("students").document(student_uid).get()
+    if not student.exists:
+        return redirect("/feed")
+
+    data = student.to_dict()
+    all_posts = db.collection("posts").stream()
+    their_posts = []
+    for p in all_posts:
+        post_data = p.to_dict()
+        if post_data.get("author") == data["name"]:
+            post_data["id"] = p.id
+            their_posts.append(post_data)
+
+    return render_template("student_profile.html",
+        student=data,
+        my_posts=their_posts,
+        session=session
+    )
 if __name__ == "__main__":
     app.run(debug=True)

@@ -333,7 +333,14 @@
 
                 <div class="post-header">
                     <span class="post-category">{{ post.category }}</span>
-                    <span class="post-author">by {{ post.author }}</span>
+                 <span class="post-author">by 
+    {% if post.author_uid %}
+        <a href="/student/{{ post.author_uid }}" style="color:#a855f7; text-decoration:none;">{{ post.author }}</a>
+    {% else %}
+        {{ post.author }}
+    {% endif %}
+    {% if post.time %} · {{ post.time }}{% endif %}
+</span>
                 </div>
 
                 <h3>{{ post.title }}</h3>

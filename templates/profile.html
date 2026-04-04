@@ -254,6 +254,11 @@
                     {% endfor %}
                 </div>
                 <a href="/edit-profile" class="edit-btn">✏️ Edit Profile</a>
+                {% if session.get('uid') != student.uid %}
+<a href="/chat/{{ student.uid }}" class="edit-btn" style="background: linear-gradient(135deg, #a855f7, #ec4899); margin-left: 10px;">
+    💬 Message
+</a>
+{% endif %}
                 <a href="/logout" class="logout-btn">🚪 Logout</a>
             </div>
         </div>
