@@ -173,13 +173,32 @@
             </form>
         </div>
 
-        {% if result %}
-        <div class="result-box">
-            <span class="ai-badge">✨ AI Powered</span>
-            <h3>Best Matches Found:</h3>
-            <p>{{ result }}</p>
+{% if result %}
+<!-- Student Cards to Message -->
+<div style="margin-top: 30px;">
+    <h3 style="color:#a855f7; font-size:18px; margin-bottom:15px;">
+        🎯 Connect with students:
+    </h3>
+    {% for student in students %}
+    {% if session.get('uid') != student.uid %}
+    <div style="background:linear-gradient(135deg,#1a1a2e,#16162a); border:1px solid #a855f722; border-radius:12px; padding:16px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+            <p style="color:white; font-weight:bold; font-size:15px;">{{ student.name }}</p>
+            <p style="color:#666; font-size:13px;">{{ student.branch }} · {{ student.skills }}</p>
         </div>
-        {% endif %}
+        <div style="display:flex; gap:8px;">
+            <a href="/student/{{ student.uid }}" style="padding:8px 16px; background:#a855f722; border:1px solid #a855f7; border-radius:8px; color:#d8a0f7; text-decoration:none; font-size:13px;">
+                👤 Profile
+            </a>
+            <a href="/chat/{{ student.uid }}" style="padding:8px 16px; background:linear-gradient(135deg,#a855f7,#ec4899); border-radius:8px; color:white; text-decoration:none; font-size:13px; font-weight:bold;">
+                💬 Message
+            </a>
+        </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
     </div>
 
 </body>

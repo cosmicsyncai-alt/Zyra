@@ -291,12 +291,12 @@ def api_add_post():
 def match():
     result = None
     query = None
+    students = []
 
     if request.method == "POST":
         query = request.form["query"]
 
         students_ref = db.collection("students").stream()
-        students = []
         for s in students_ref:
             students.append(s.to_dict())
 
@@ -322,7 +322,12 @@ def match():
 
         result = response.choices[0].message.content
 
-    return render_template("match.html", result=result, query=query)
+    else:
+        students_ref = db.collection("students").stream()
+        for s in students_ref:
+            students.append(s.to_dict())
+
+    return render_template("match.html", result=result, query=query, students=students, session=session)
 
 
 # ─── ANNOUNCEMENTS ────────────────────────────────
@@ -529,7 +534,7 @@ def send_message_page(receiver_uid):
     return redirect(f"/chat/{receiver_uid}")
 
 
-    
+
 
 # ─── STUDENT PROFILE ──────────────────────────────
 @app.route("/student/<student_uid>")
