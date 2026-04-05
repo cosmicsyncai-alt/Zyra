@@ -1,206 +1,115 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Find Teammate - Zyra</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+{% extends "base.html" %}
+{% block title %}Find Teammate - Zyra{% endblock %}
+{% block styles %}
+.container { max-width: 750px; margin: 50px auto; padding: 0 20px; }
+.chat-header { text-align: center; margin-bottom: 40px; }
+.ai-icon {
+    width: 80px; height: 80px;
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+    border-radius: 50%; display: flex; align-items: center;
+    justify-content: center; font-size: 36px;
+    margin: 0 auto 15px; box-shadow: 0 0 30px #a855f755;
+}
+.chat-header h1 {
+    font-size: 32px; font-weight: 800;
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+}
+.chat-header p { color: #777777; font-size: 16px; }
+.search-box {
+    background: linear-gradient(135deg, #1a1a2e, #16162a);
+    border: 1px solid #a855f733; border-radius: 16px;
+    padding: 25px; margin-bottom: 20px;
+}
+.question-input {
+    width: 100%; padding: 14px 18px; background: #0a0a0f;
+    border: 1px solid #a855f733; border-radius: 10px;
+    color: white; font-size: 15px; margin-bottom: 15px;
+    outline: none; resize: vertical; min-height: 60px;
+    font-family: Arial, sans-serif;
+}
+.question-input:focus { border-color: #a855f7; }
+.ask-btn {
+    width: 100%; padding: 14px;
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+    color: white; border: none; border-radius: 10px;
+    font-size: 17px; font-weight: bold; cursor: pointer;
+}
+.result-box {
+    background: linear-gradient(135deg, #1a1a2e, #16162a);
+    border: 1px solid #a855f733; border-radius: 16px;
+    padding: 25px; margin-top: 20px;
+}
+.result-box h3 { color: #a855f7; margin-bottom: 15px; font-size: 20px; }
+.result-box p { color: #cccccc; line-height: 1.8; font-size: 15px; }
+.ai-badge {
+    display: inline-block; background: #a855f722; color: #d8a0f7;
+    padding: 4px 12px; border-radius: 20px; font-size: 12px;
+    border: 1px solid #a855f755; margin-bottom: 15px;
+}
+.student-match-card {
+    background: #0a0a0f; border: 1px solid #a855f744;
+    border-radius: 12px; padding: 16px; margin-top: 12px;
+    display: flex; justify-content: space-between;
+    align-items: center; flex-wrap: wrap; gap: 12px;
+}
+.student-match-card .info p:first-child { color: white; font-weight: bold; font-size: 15px; }
+.student-match-card .info p { color: #777; font-size: 13px; margin-top: 4px; }
+.match-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.match-btns a {
+    padding: 8px 16px; border-radius: 8px;
+    text-decoration: none; font-size: 13px; font-weight: bold;
+}
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="chat-header">
+        <div class="ai-icon">🤖</div>
+        <h1>AI Teammate Finder</h1>
+        <p>Tell AI what you need — it finds the best match</p>
+    </div>
 
-        body {
-            background-color: #0f0f0f;
-            color: white;
-            font-family: Arial, sans-serif;
-        }
+    <div class="search-box">
+        <form action="/match" method="POST">
+            <textarea class="question-input" name="query" id="queryInput"
+                placeholder="e.g. I need someone who knows Python and Machine Learning"
+                required>{{ query if query }}</textarea>
+            <button type="submit" class="ask-btn">🔍 Find My Teammate</button>
+        </form>
+    </div>
 
-        nav {
-            background-color: #1a1a1a;
-            padding: 15px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #00d4ff;
-        }
+    {% if result %}
+    <div class="result-box">
+        <span class="ai-badge">✨ AI Powered</span>
+        <h3>Best Match Found:</h3>
+        <p>{{ result }}</p>
 
-        nav .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #00d4ff;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin-left: 25px;
-            font-size: 16px;
-        }
-
-        nav a:hover { color: #00d4ff; }
-
-        .container {
-            max-width: 700px;
-            margin: 60px auto;
-            padding: 0 20px;
-        }
-
-        .container h2 {
-            color: #00d4ff;
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-
-        .container p {
-            color: #aaaaaa;
-            margin-bottom: 30px;
-        }
-
-        .search-box {
-            background-color: #1a1a1a;
-            padding: 30px;
-            border-radius: 12px;
-            border: 1px solid #00d4ff;
-            margin-bottom: 30px;
-        }
-
-        input {
-            width: 100%;
-            padding: 14px;
-            background-color: #0f0f0f;
-            border: 1px solid #333;
-            border-radius: 8px;
-            color: white;
-            font-size: 16px;
-            margin-bottom: 15px;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #00d4ff;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 14px;
-            background-color: #00d4ff;
-            color: black;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .btn:hover { background-color: #00a8cc; }
-
-        .result-box {
-            background-color: #1a1a1a;
-            border: 1px solid #333;
-            border-radius: 12px;
-            padding: 25px;
-            margin-top: 20px;
-        }
-
-        .result-box h3 {
-            color: #00d4ff;
-            margin-bottom: 15px;
-            font-size: 20px;
-        }
-
-        .result-box p {
-            color: #cccccc;
-            line-height: 1.8;
-            font-size: 15px;
-        }
-
-        .ai-badge {
-            display: inline-block;
-            background-color: #00d4ff22;
-            color: #00d4ff;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            border: 1px solid #00d4ff55;
-            margin-bottom: 15px;
-        }
-    </style>
-</head>
-<body>
-
-   <nav>
-    <a href="/" style="text-decoration:none; display:flex; align-items:center; gap:8px;">
-        <svg width="38" height="38" viewBox="0 0 38 38" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <linearGradient id="zgrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style="stop-color:#a855f7"/>
-                    <stop offset="100%" style="stop-color:#ec4899"/>
-                </linearGradient>
-            </defs>
-            <rect width="38" height="38" rx="10" fill="url(#zgrad)"/>
-            <text x="7" y="28" font-family="Arial" font-weight="900" font-size="24" fill="white">Z</text>
-        </svg>
-        <span style="font-size:22px; font-weight:900; background:linear-gradient(90deg,#a855f7,#ec4899); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Zyra</span>
-    </a>
-    <div>
-        <a href="/">Home</a>
-        <a href="/feed">Feed</a>
-        <a href="/announcements">📢 Announcements</a>
-        <a href="/post">Post</a>
-        <a href="/match">Find Teammate</a>
-        <a href="/askzyra">AskZyra 🤖</a>
-        {% if session.get('uid') %}
-    <a href="/messages">💬 Messages</a>
-    <a href="/myposts">My Posts</a>
-    <a href="/profile">Profile</a>
-    <a href="/logout">Logout</a>
-{% else %}
-            <a href="/login">Login</a>
-            <a href="/signup">Sign Up</a>
+        {% if matched_students %}
+        <div style="margin-top:20px;">
+            <h3 style="font-size:16px; margin-bottom:12px;">🎯 Connect with them:</h3>
+            {% for student in matched_students %}
+            <div class="student-match-card">
+                <div class="info">
+                    <p>{{ student.name }}</p>
+                    <p>{{ student.branch }} · {{ student.semester }} Semester</p>
+                    <p style="color:#a855f7;">🛠️ {{ student.skills }}</p>
+                </div>
+                <div class="match-btns">
+                    <a href="/student/{{ student.uid }}"
+                        style="background:#a855f722; border:1px solid #a855f7; color:#d8a0f7;">
+                        👤 Profile
+                    </a>
+                    <a href="/chat/{{ student.uid }}"
+                        style="background:linear-gradient(135deg,#a855f7,#ec4899); color:white;">
+                        💬 Message
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
         {% endif %}
     </div>
-</nav>
-
-    <div class="container">
-        <h2>🤖 AI Teammate Finder</h2>
-        <p>Tell AI what you need — it will find the best match from our community.</p>
-
-        <div class="search-box">
-            <form action="/match" method="POST">
-                <input 
-                    type="text" 
-                    name="query" 
-                    placeholder="e.g. I need someone who knows Python and Machine Learning"
-                    value="{{ query if query }}"
-                    required
-                >
-                <button type="submit" class="btn">🔍 Find My Teammate</button>
-            </form>
-        </div>
-
-{% if result %}
-<!-- AI Matched Students -->
-{% if matched_students %}
-<div style="margin-top: 30px;">
-    <h3 style="color:#a855f7; font-size:18px; margin-bottom:15px;">
-        🎯 AI Recommended Matches:
-    </h3>
-    {% for student in matched_students %}
-    <div style="background:linear-gradient(135deg,#1a1a2e,#16162a); border:1px solid #a855f744; border-radius:12px; padding:18px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
-        <div>
-            <p style="color:white; font-weight:bold; font-size:16px;">{{ student.name }}</p>
-            <p style="color:#888; font-size:13px; margin-top:4px;">{{ student.branch }} — {{ student.semester }} Semester</p>
-            <p style="color:#a855f7; font-size:12px; margin-top:4px;">🛠️ {{ student.skills }}</p>
-        </div>
-         <div style="display:flex; gap:8px; flex-shrink:0;">
-            <a href="/student/{{ student.uid }}" style="padding:8px 16px; background:#a855f722; border:1px solid #a855f7; border-radius:8px; color:#d8a0f7; text-decoration:none; font-size:13px;">
-                👤 Profile
-            </a>
-            <a href="/chat/{{ student.uid }}" style="padding:8px 16px; background:linear-gradient(135deg,#a855f7,#ec4899); border-radius:8px; color:white; text-decoration:none; font-size:13px; font-weight:bold;">
-                💬 Message
-            </a>
-        </div>
-    </div>
-    {% endfor %}
+    {% endif %}
 </div>
-   {% endif %}
-{% endif %}
-  </div>
-</body>
-</html>
+{% endblock %}
