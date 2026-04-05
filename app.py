@@ -208,10 +208,11 @@ def feed():
         post_data["id"] = p.id
         post_data["likes"] = post_data.get("likes", 0)
         post_data["comments"] = post_data.get("comments", [])
+        post_data["time"] = post_data.get("time", "")
         posts.append(post_data)
 
-    # Sort by time — newest first
-    posts.reverse()
+    # Sort newest first
+    posts.sort(key=lambda x: x["time"], reverse=True)
 
     students_ref = db.collection("students").stream()
     students = []
@@ -219,7 +220,6 @@ def feed():
         students.append(student.to_dict())
 
     return render_template("feed.html", posts=posts, students=students, session=session)
-
 
 # ─── LIKE ─────────────────────────────────────────
 @app.route("/like/<post_id>", methods=["POST"])
