@@ -580,5 +580,12 @@ def student_profile(student_uid):
         my_posts=their_posts,
         session=session
     )
+
+    from flask import send_from_directory
+
+@app.route('/static/sw.js')
+def service_worker():
+    return send_from_directory('static', 'sw.js',
+        mimetype='application/javascript')
 if __name__ == "__main__":
     app.run(debug=True)
